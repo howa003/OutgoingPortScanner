@@ -1,9 +1,9 @@
 import socket
 
 
-def check_port(server, port):
+def check_port(server, port, timeout):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.settimeout(0.01)  # Set a timeout for the connection attempt
+    sock.settimeout(timeout)
 
     result = sock.connect_ex((server, port))
 
@@ -17,10 +17,10 @@ def check_port(server, port):
     return port_is_opened
 
 
-def check_ports(server, start_port, end_port):
+def check_ports(server, start_port, end_port, timeout):
     opened_ports = []
     for port in range(start_port, end_port + 1):
-        port_is_opened = check_port(server, port)
+        port_is_opened = check_port(server, port, timeout)
         if port_is_opened:
             print(f"JACKPOT!!! PORT {port} IS OPENED!!!")
             opened_ports.append(port)
@@ -37,7 +37,10 @@ def main():
     start_port = 1
     end_port = 49151
 
-    opened_ports = check_ports(server, start_port, end_port)
+    # Timeout for the connection attempt
+    timeout = 0.1 # in seconds
+
+    opened_ports = check_ports(server, start_port, end_port, timeout)
     print(f"Opened ports: {opened_ports}")
 
 
